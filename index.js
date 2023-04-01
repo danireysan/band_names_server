@@ -1,8 +1,31 @@
 const express = require("express");
+const path = require("path");
+
+require("dotenv").config();
+// Express server
 const app = express();
 
-app.listen(3000, (err) => {
+// Node server
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+
+// Socket messages
+
+io.on("connection", (client) => {
+    console.log("User connected");
+    client.on("disconnect", () => {
+      console.log("User disconnected");
+    });
+  });
+
+// Public path
+// NOTE: This is the path
+const publicPath = path.resolve(__dirname, "./public");
+
+app.use(express.static(publicPath));
+
+app.listen(process.env.PORT, (err) => {
   if (err) throw new Error(err);
 
-  console.log("Server running on port 3000");
+  console.log("Server running on port", process.env.PORT);
 });
