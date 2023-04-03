@@ -11,12 +11,12 @@ const io = require("socket.io")(server);
 
 // Socket messages
 
-io.on("connection", (client) => {
-    console.log("User connected");
-    client.on("disconnect", () => {
-      console.log("User disconnected");
-    });
+io.on('connection', client => {
+  console.log('Client connected...');
+  client.on('disconnect', () => { 
+    console.log('Client disconnected') 
   });
+});
 
 // Public path
 // NOTE: This is the path
@@ -24,7 +24,7 @@ const publicPath = path.resolve(__dirname, "./public");
 
 app.use(express.static(publicPath));
 
-app.listen(process.env.PORT, (err) => {
+server.listen(process.env.PORT, (err) => {
   if (err) throw new Error(err);
 
   console.log("Server running on port", process.env.PORT);
