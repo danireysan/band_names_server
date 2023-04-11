@@ -11,12 +11,11 @@ bands.addBand(new Band("Eminem"));
 
 console.log(bands);
 
-
 io.on("connection", (client) => {
   console.log("Client connected...");
 
   client.emit("active-bands", bands.getBands());
-  
+
   client.on("disconnect", () => {
     console.log("Client disconnected");
   });
@@ -27,17 +26,18 @@ io.on("connection", (client) => {
     io.emit("message", { admin: "New message" });
   });
 
-  client.on("emit-message", function (payload) {
-    client.broadcast.emit("new-message", payload);
-  });
-
   client.on("vote-band", (payload) => {
     bands.voteBand(payload.id);
     io.emit("active-bands", bands.getBands());
   });
 
-  client.on('add-band', (payload) => {
+  client.on("add-band", (payload) => {
     bands.addBand(new Band(payload.name));
     io.emit("active-bands", bands.getBands());
-  })
+  });
+
+  client.on("delete-band", (payload) => {
+    bands.deleteBands(payload.id);
+    io.emit("active-bands", bands.getBands());
+  });
 });
